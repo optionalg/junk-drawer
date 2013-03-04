@@ -1,0 +1,34 @@
+# Super minimal set of packages for
+# RHEL installation.  Total w/ deps
+# is around 250 packages.
+
+%packages  --nobase
+openssh-clients
+openssh-server
+yum
+yum-plugin-versionlock
+at
+acpid
+audit
+bind-utils
+curl
+vixie-cron
+cronie-noanacron
+crontabs
+logrotate
+nfs-utils
+ntp
+man
+vim-enhanced
+screen
+lsof
+tcpdump
+strace
+ntpdate
+tmpwatch
+rsync
+mailx
+which
+wget
+selinux-policy-targeted
+

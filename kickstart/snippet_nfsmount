@@ -1,0 +1,21 @@
+# NFS Share Mounting Snippet
+# Uses KS_META data.  Store an array of NFS shares
+# to be mounted like this:
+# ksmeta = { 'nfs_share': [ "share1|mountpount1", "share2|mountpoint2" ] }
+
+#if $nfs_share != ""
+    #if $isinstance($nfs_share,str)
+        #set $nfs_share=[$nfs_share]
+    #end if
+
+    #for $share in $nfs_share
+        #if $len($share.split("|")) == 2
+            #set [$source, $destination] = $share.split('|')
+            #set $options = "proto=udp,intr,ro,hard,_netdev"
+        #else if $len($share.split("|")) == 3
+            #set [$source, $destination, $options] = $share.split('|')
+        #end if
+mkdir -p $destination
+echo "$source   $destination    nfs $options    0 0" >> /etc/fstab
+    #end for
+#end if

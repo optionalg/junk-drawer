@@ -1,0 +1,27 @@
+# This snippet implements a first boot script
+# 1. creates /root/firstboot.sh
+# 2. installs it into rc.local
+# 3. this script will run on next reboot
+# 4. it will remove itself on the next run
+
+cat <<EOF >/root/firstboot.sh
+#!/bin/bash
+# This was created by a
+# kickstat snippet.
+
+if [ -e /.firstboot_ran ];
+then
+        # Remove First Boot
+        sed -i -e '/^\/root\/firstboot.sh$/d' /etc/rc.local
+        exit 0
+fi
+
+### script content goes here ###
+
+
+touch /.firstboot_ran
+
+EOF
+
+chmod +x /root/firstboot.sh
+echo /root/firstboot.sh >> /etc/rc.local

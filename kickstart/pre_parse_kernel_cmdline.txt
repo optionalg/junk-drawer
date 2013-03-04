@@ -1,0 +1,14 @@
+# Parses kernel command line and turns it into variables
+# e.g. if you put foo=bar on the boot line in grub,
+# $foo is available in the kickstart
+
+%pre --log /tmp/ks-pre.log.2
+set -- `cat /proc/cmdline`
+for I in $*; do
+    case "$I" in
+    *=*)
+        eval $I
+        ;;
+    esac;
+done
+
