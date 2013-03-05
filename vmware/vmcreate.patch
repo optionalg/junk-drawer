@@ -1,0 +1,30 @@
+--- /tmp/vmcreate.pl	2012-12-03 13:16:50.515627368 +0000
++++ vmcreate.pl	2012-12-04 08:17:19.710563460 +0000
+@@ -219,7 +219,7 @@
+ # ================================================
+ sub create_conf_spec {
+    my $controller =
+-      VirtualBusLogicController->new(key => 0,
++      ParaVirtualSCSIController->new(key => 0,
+                                      device => [0],
+                                      busNumber => 0,
+                                      sharedBus => VirtualSCSISharing->new('noSharing'));
+@@ -240,7 +240,8 @@
+ 
+    my $disk_backing_info =
+       VirtualDiskFlatVer2BackingInfo->new(diskMode => 'persistent',
+-                                          fileName => $ds_path);
++                                          fileName => $ds_path,
++                                          thinProvisioned => 1);
+ 
+    my $disk = VirtualDisk->new(backing => $disk_backing_info,
+                                controllerKey => 0,
+@@ -280,7 +281,7 @@
+                                              connected => 0,
+                                              startConnected => $poweron);
+ 
+-            my $nic = VirtualPCNet32->new(backing => $nic_backing_info,
++            my $nic = VirtualVmxnet3->new(backing => $nic_backing_info,
+                                           key => 0,
+                                           unitNumber => $unit_num,
+                                           addressType => 'generated',
