@@ -1,0 +1,6 @@
+%include /tmp/network.ks
+
+%pre
+echo "network --bootproto static --device=eth0 --ip=$ipaddress --netmask=$netmask --gateway=$gateway --nameserver=$nameserver --hostname=$hostname" > /tmp/network.ks
+
+
