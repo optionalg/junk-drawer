@@ -1,0 +1,2 @@
+# In .zshrc:
+RPROMPT='%(?,%F{blue}:%),%F{yellow}%? %F{red}:()%f'
