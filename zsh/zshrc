@@ -1,0 +1,63 @@
+HISTFILE=~/.history
+SAVEHIST=10000
+HISTSIZE=10000
+setopt APPEND_HISTORY
+SVN_EDITOR="/usr/bin/vim"
+autoload -U compinit promptinit
+compinit
+promptinit
+prompt redhat
+
+# Smiley Face :) And Sad Face :( Prompt
+RPROMPT='%(?,%F{green}:%),%F{yellow}%? %F{red}:()%f'
+
+
+# Vim keybindings, of course
+bindkey -v
+
+#allow tab completion in the middle of a word
+setopt COMPLETE_IN_WORD
+
+## never ever beep 
+setopt NO_BEEP
+
+# some helpful pipe aliases
+alias -g G='|grep'
+alias grep="grep --color=auto"
+alias -g L='|less'
+alias -g T='|tail'
+alias -g V='|vim'
+alias serve="python -m SimpleHTTPServer"
+alias mutt="TERM=xterm-256color mutt"
+alias dj="python manage.py runserver"
+
+# other useful aliases
+alias pks='source ~/.zshrc'
+alias psx="ps aux | grep ${1}"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ...="cd ../../.."
+
+# humans are stupid
+alias rm='rm -iv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+
+# ls on cd
+function chpwd() {
+	emulate -LR zsh
+    	ls 
+}
+
+# Delete a duplicate entry in known hosts
+# When ssh tells you there's a duplicate
+# key on line XX, just run 'dsh XX'
+function dsh() {
+	sed -i ${1}d ~/.ssh/known_hosts
+}
+
+export SVN_EDITOR="/usr/bin/vim"
+export TSOCKS_CONFFILE=/home/stbenjam/tsocks.conf
+alias proxyoff="unset HTTP_PROXY; unset HTTPS_PROXY; unset FTP_PROXY; unset http_proxy; unset https_proxy"
+
+setterm -blink on
