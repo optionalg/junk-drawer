@@ -1,0 +1,54 @@
+HISTFILE=~/.history
+SAVEHIST=10000
+HISTSIZE=10000
+SVN_EDITOR="/usr/bin/vim"
+export TSOCKS_CONFFILE=/home/stbenjam/tsocks.conf
+
+setopt APPEND_HISTORY
+setopt COMPLETE_IN_WORD
+setopt NO_BEEP
+
+autoload -U compinit promptinit
+compinit
+promptinit
+prompt redhat
+
+# Smiley Face :) And Sad Face :( Prompt
+RPROMPT='%(?,%F{green}:%),%F{yellow}%? %F{red}:()%f'
+
+# some helpful pipe aliases
+alias -g G='|grep'
+alias grep="grep --color=auto"
+alias -g L='|less'
+alias -g T='|tail'
+alias -g V='|vim'
+alias ws="python -m SimpleHTTPServer"
+alias mutt="TERM=xterm-256color mutt"
+alias dj="python manage.py runserver"
+
+# other useful aliases
+alias pks='source ~/.zshrc'
+alias psx="ps aux | grep ${1}"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ...="cd ../../.."
+alias rm='rm -iv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+
+alias proxyoff="unset HTTP_PROXY; unset HTTPS_PROXY; unset FTP_PROXY; unset http_proxy; unset https_proxy"
+
+# ls on cd
+function chpwd() {
+	emulate -LR zsh
+    	ls 
+}
+
+# Delete a duplicate entry in known hosts
+
+function dsh() {
+	sed -i ${1}d ~/.ssh/known_hosts
+}
+
+
+setterm -blink on

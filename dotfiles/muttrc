@@ -1,0 +1,132 @@
+source ~/.muttcolors
+
+set realname="Stephen Benjamin"
+set from="stbenjam@redhat.com"
+
+# Mailbox Settings
+set record=~/Maildir/Sent
+set spoolfile=~/Maildir/INBOX
+set header_cache=~/Localmail/hcache
+set mbox_type=Maildir
+set folder=~/Maildir/
+
+# VIM
+set editor = "vim +:silent+/^$" 
+
+# GPG
+set pgp_decode_command="gpg %?p?--passphrase-fd 0? --no-verbose --batch --output - %f"
+set pgp_verify_command="gpg --no-verbose --batch --output - --verify %s %f"
+set pgp_decrypt_command="gpg --passphrase-fd 0 --no-verbose --batch --output - %f"
+set pgp_sign_command="gpg --no-verbose --batch --output - --passphrase-fd 0 --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_clearsign_command="gpg --no-verbose --batch --output - --passphrase-fd 0 --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_encrypt_only_command="pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust --encrypt-to 0xC9C40C31 -- -r %r -- %f"
+set pgp_encrypt_sign_command="pgpewrap gpg --passphrase-fd 0 --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust --encrypt-to 0xC9C40C31 -- -r %r -- %f"
+set pgp_import_command="gpg --no-verbose --import -v %f"
+set pgp_export_command="gpg --no-verbose --export --armor %r"
+set pgp_verify_key_command="gpg --no-verbose --batch --fingerprint --check-sigs %r"
+set pgp_list_pubring_command="gpg --no-verbose --batch --with-colons --list-keys %r" 
+set pgp_list_secring_command="gpg --no-verbose --batch --with-colons --list-secret-keys %r" 
+set pgp_autosign=yes
+set pgp_sign_as=0x767C30A9
+set pgp_replyencrypt=yes
+set pgp_timeout=1800
+set pgp_good_sign="^gpg: Good signature from"
+
+# Compose Options
+set forward_format  = "Fwd: %s"
+set include
+set fcc_attach
+set envelope_from="yes"
+set fast_reply
+set edit_headers=yes
+set sig_dashes=yes
+set signature="~/.signature"
+
+# Viewing
+set sort=threads
+set sort_re
+unset strict_threads
+set reply_regexp="^((\
+[Rr][Eeé]?[  ]?:[ \t ]*|\
+Re\\[[0-9]+\\]:|\
+Re\\([0-9]+\\):|\
+Re\\^[0-9]+:|\
+AW:|\
+SV:|\
+Ad:|\
+Odp:|\
+Obj\\.? ?:|\
+Re&nbsp;:|\
+Antw(ort)?:|\
+R[eé]f\\. :|\
+Rép\\. :|\
+R[eé]p\\.?:|\
+F[Ww][Dd]? ?:|\
+T[Rr] ?:|\
+Trans\\. :\
+)[ \t ]*)+"
+
+# Viewing
+set markers="no"
+
+# Check for new mail
+macro index <F12> "<shell-escape>$HOME/bin/newmail.sh<enter>"
+
+# Notmuch
+### BEGIN NOTMUCH-MUTT SETTINGS
+           macro index / \
+                 "<enter-command>unset wait_key<enter><shell-escape>notmuch-mutt --prompt search<enter><change-folder-readonly>~/.cache/notmuch/mutt/results<enter>" \
+                 "notmuch: search mail"
+           macro index <F9> \
+                 "<enter-command>unset wait_key<enter><pipe-message>notmuch-mutt thread<enter><change-folder-readonly>~/.cache/notmuch/mutt/results<enter><enter-command>set wait_key<enter>" \
+                 "notmuch: reconstruct thread"
+           macro index <F6> \
+                 "<enter-command>unset wait_key<enter><pipe-message>notmuch-mutt tag -inbox<enter>" \
+                 "notmuch: remove message from inbox"
+
+
+# Colors
+
+
+# Sidebar
+mailboxes =INBOX \
+=consult-list \
+=friday-list \
+=memo-list \
+=pulp-list \
+=rhev-tech \
+=techlist \
+=Archived_Mail \
+=Drafts \
+=Junk \
+=Sent \
+=Trash \
+
+set sidebar_visible=yes
+set sidebar_width=25
+
+bind index \CP sidebar-prev
+bind index \CN sidebar-next
+bind index \CO sidebar-open
+bind pager \CP sidebar-prev
+bind pager \CN sidebar-next
+bind pager \CO sidebar-open
+
+# b toggles sidebar visibility
+macro index a '<save-message>=Archived_Mail<enter>Y'  "Archive Message"
+macro pager a '<save-message>=Archived_Mail<enter>Y'  "Archive Message"
+macro index b '<enter-command>toggle sidebar_visible<enter><refresh>'
+macro pager b '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
+# Remap bounce-message function to “B”
+bind index B bounce-message
+
+# Mark All Read
+macro index M "T.*\n;WN" "Mark all messages as read"
+
+# Some viewing settings
+macro index \cb |urlview\n
+macro pager \cb |urlview\n
+auto_view text/calendar
+auto_view text/html
+alternative_order text/plain text/html
+
