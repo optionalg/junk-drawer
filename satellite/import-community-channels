@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+#
+# Just a quick script to import
+# community channels into Satellite
+# like EPEL, Puppet, et al.
+#
+# MIT License
+#  
+# Copyright 2013 by Stephen Benjamin <stephen@bitbin.de>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+import xmlrpclib
+import ConfigParser
+import getpass
+
+repos = "repos.conf"
+config = ConfigParser.ConfigParser()
+config.read(repos)
+
+enabled_repos = [repo for repo in config.sections() if config.getboolean(repo, "enabled")]
+
+# Get satelite credentials
+spacesrv = "http://%s/rpc/api" % raw_input("Satellite Hostname: ")
+username = raw_input("Username: ")
+password = getpass.getpass("Password: ")
+
+satellite = xmlrpclib.Server(spacesrv)
+key = satellite.auth.login(username, password)
+
+for repo in enabled_repos:
+    print "Creating repo %s..." % repo
+
+    try:
+        satellite.channel.software.createRepo(key, repo, "YUM", config.get(repo, "baseurl"))
+    except xmlrpclib.Fault:
+        print "Failed to import repo %s -- does it already exist?" % repo
+        continue
+
+    repoName = config.get(repo, "name")
+    repoSummary = "Yum Import: %s" % repo
+    repoArch = config.get(repo, "arch")
+    repoChecksum = config.get(repo, "checksum")
+    repoGpgKey = config.get(repo, "gpgkey")
+    repoParent = config.get(repo, "parent")
+
+    print "Create satellite channel for %s... " % repo
+
+    try:
+        satellite.channel.software.create(key, repo, repoName, repoSummary, "channel-"+ repoArch,
+                                          repoParent, repoChecksum, {'url': repoGpgKey})
+    except xmlrpclib.Fault:
+        print "Failed to create channel %s -- does it already exist?" % repo
+        continue
+
+    print "Starting sync for %s..." % repo
+    satellite.channel.software.syncRepo(key, repo)
