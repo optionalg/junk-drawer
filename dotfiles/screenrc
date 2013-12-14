@@ -1,0 +1,20 @@
+# Looks nice
+caption always "%{yK}   -=%H=- | $LOGNAME | %{yK}%c |  %{yK}%-Lw%{yK}%50>%{Ky}%n%f* %t%{-}%+Lw%<%{- Wk}"
+
+crlf off
+startup_message off	
+defscrollback 10000
+defmonitor on	
+activity "%"
+
+bindkey -k kh select 0 # Home = screen 0
+bindkey -k k1 select 0 # F1 = screen 0
+bindkey -k k2 select 1 # F2 = screen 1
+bindkey -k k3 select 2 # F3 = screen 2
+bindkey -k k4 select 3 # F4 = screen 3
+bindkey -k k5 select 4 # F5 = screen 4
+bindkey -k k6 select 5 # F6 = screen 5
+bindkey -k k7 select 6 # F7 = screen 6
+bindkey -k k8 select 7 # F8 = screen 7
+bindkey -k F2 next     # F12 = next
+bindkey -k F1 prev     # F11 = previous
