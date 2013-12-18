@@ -1,0 +1,27 @@
+#cloud-config
+password: drowssap
+chpasswd: { expire: False }
+ssh_pwauth: True
+write_files:
+-  path: /root/rhn_register.sh
+   permissions: '0755'
+   content: |
+     #!/bin/bash
+     # RHN Registration Script
+     SATELLITE=rhn.example.com
+     ACTIVATION_KEYS=1-default
+
+     echo "Obtaining RHN SSL certificate"
+     curl -o /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT http://$SATELLITE/pub/RHN-ORG-TRUSTED-SSL-CERT 
+
+     echo "Updating SSL CA Certificate"
+     sed -i -e "s|^sslCACert=.*$|sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT|" /etc/sysconfig/rhn/up2date
+
+     echo "Updating Satellite Hostname to $SATELLITE"
+     sed -i -e "s|^serverURL=.*$|serverURL=https://$SATELLITE/XMLRPC|" /etc/sysconfig/rhn/up2date
+     sed -i -e "s|^noSSLServerURL=.*$|noSSLServerURL=https://$SATELLITE/XMLRPC|" /etc/sysconfig/rhn/up2date
+
+     echo -n "Performing RHN Registration... "
+     rhnreg_ks --activationkey=$ACTIVATION_KEYS
+runcmd:
+ - [ cloud-init-per, once, rhn_reg, /root/rhn_register.sh ]
