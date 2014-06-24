@@ -1,0 +1,42 @@
+#cloud-config
+write_files:
+-  path: /root/install_katello.sh
+   permissions: '0755'
+   content: |
+     #!/bin/bash
+     CLOUD_USER="cloud-user"     
+     RHN_USER="your-rhn-user"
+     RHN_PASS="XXXXXXXXXXXXX"
+
+     service iptables stop
+     chkconfig iptables off
+
+     subscription-manager register --username $RHN_USER --password $RHN_PASS --auto-attach
+
+     yum -y install git ruby screen vim-enhanced telnet
+
+     mkdir -p /etc/pki/pulp # due to 6368
+
+     cd /root
+     git clone https://github.com/Katello/katello-deploy.git
+     cd katello-deploy
+     ./setup.rb --devel --devel-user=$CLOUD_USER rhel6
+
+     CLD_HOME=$(eval echo ~$CLOUD_USER)
+
+     GEM_FILE=$CLD_HOME/foreman/bundler.d/Gemfile.local.rb
+     echo gem \'puma\' >> $GEM_FILE
+     echo gem \'puma-rails\' >> $GEM_FILE
+     chown $CLOUD_USER $GEM_FILE
+
+     sed -i -e "s/^Defaults.*requiretty$/Defaults !requiretty/g" /etc/sudoers
+
+     sudo su $CLOUD_USER -c "/bin/bash --login -c \"rvm use 1.9.3-p448 && cd $CLD_HOME/foreman && bundle install\""
+
+     # Start rails server in a detached screen session
+     sudo su $CLOUD_USER -c "/bin/bash --login -c \"cd $CLD_HOME/foreman && screen -m -d rails s puma\""
+     echo "Done."
+runcmd:
+ - [ cloud-init-per, once, install_katello, /root/install_katello.sh ]
+output: {all: '| tee -a /root/katello.log'}
+
