@@ -14,11 +14,10 @@ set folder=~/Maildir/
 set record="=Sent"
 set postponed="=Drafts"
 
-# Open editor and start in insert
-# mode directly below the header
+# Start in insert mode, in the right place
 set editor = "vim +:silent +/^$ +:nohlsearch +star"
 
-# GPG 
+# GPG
 set pgp_use_gpg_agent=yes
 set pgp_decode_command="gpg --no-verbose --batch --output - %f"
 set pgp_verify_command="gpg --no-verbose --batch --output - --verify %s %f"
@@ -38,6 +37,7 @@ set pgp_replyencrypt=yes
 set pgp_timeout=1800
 set pgp_good_sign="^gpg: Good signature from"
 
+set query_command="/usr/bin/lbdbq %s" 
 
 # Compose Options
 set forward_format  = "Fwd: %s"
@@ -84,7 +84,7 @@ macro index <F12> "<shell-escape>$HOME/bin/checkmail.sh<enter>"
 
 # Notmuch
 ### BEGIN NOTMUCH-MUTT SETTINGS
-           macro index / \
+          macro index / \
                  "<enter-command>unset wait_key<enter><shell-escape>notmuch-mutt --prompt search<enter><change-folder-readonly>~/.cache/notmuch/mutt/results<enter>" \
                  "notmuch: search mail"
            macro index <F9> \
@@ -98,6 +98,15 @@ macro index <F12> "<shell-escape>$HOME/bin/checkmail.sh<enter>"
 
 # Sidebar
 mailboxes =INBOX \
+=satellite6-list \
+=bugs \
+=foreman-users \
+=foreman-dev \
+=freeipa-users \
+=friday-list \
+=memo-list \
+=pulp-list \
+=techlist \
 =Archived_Mail \
 =Drafts \
 =Junk \
@@ -131,4 +140,3 @@ macro pager \cb |urlview\n
 auto_view text/calendar
 auto_view text/html
 alternative_order text/plain text/html
-
