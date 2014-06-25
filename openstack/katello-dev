@@ -25,6 +25,7 @@ write_files:
      CLD_HOME=$(eval echo ~$CLOUD_USER)
 
      GEM_FILE=$CLD_HOME/foreman/bundler.d/Gemfile.local.rb
+     echo 'map("/assets"){ run Rails.application.assets }' >> $CLD_HOME/foreman/config.ru
      echo gem \'puma\' >> $GEM_FILE
      echo gem \'puma-rails\' >> $GEM_FILE
      chown $CLOUD_USER $GEM_FILE
