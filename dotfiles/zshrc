@@ -1,54 +1,42 @@
-HISTFILE=~/.history
-SAVEHIST=10000
-HISTSIZE=10000
-SVN_EDITOR="/usr/bin/vim"
-export TSOCKS_CONFFILE=/home/stbenjam/tsocks.conf
+export ZSH=$HOME/.oh-my-zsh
 
-setopt APPEND_HISTORY
-setopt COMPLETE_IN_WORD
-setopt NO_BEEP
-
-autoload -U compinit promptinit
-compinit
-promptinit
-prompt redhat
-
-# Smiley Face :) And Sad Face :( Prompt
+# Smiley prompt
 RPROMPT='%(?,%F{green}:%),%F{yellow}%? %F{red}:()%f'
 
-# some helpful pipe aliases
+# Oh my ZSH settings
+ZSH_THEME="gentoo"
+DISABLE_AUTO_UPDATE="true"
+plugins=(git)
+source $ZSH/oh-my-zsh.sh
+
+export PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/home/stbenjam/.local/bin:/home/stbenjam/bin"
+export LANG=en_US.UTF-8
+export EDITOR='vim'
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export GPG_TTY=$(tty)
+
+PERL_MB_OPT="--install_base \"/home/stbenjam/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/stbenjam/perl5"; export PERL_MM_OPT;
+
+# some helpful aliases
 alias -g G='|grep'
 alias grep="grep --color=auto"
 alias -g L='|less'
 alias -g T='|tail'
 alias -g V='|vim'
+
 alias ws="python -m SimpleHTTPServer"
-alias mutt="TERM=xterm-256color mutt"
 alias dj="python manage.py runserver"
+alias rs="rails s"
 
-# other useful aliases
-alias pks='source ~/.zshrc'
-alias psx="ps aux | grep ${1}"
-alias ..="cd .."
-alias ...="cd ../.."
-alias ...="cd ../../.."
-alias rm='rm -iv'
-alias cp='cp -iv'
-alias mv='mv -iv'
-
-alias proxyoff="unset HTTP_PROXY; unset HTTPS_PROXY; unset FTP_PROXY; unset http_proxy; unset https_proxy"
 
 # ls on cd
 function chpwd() {
-	emulate -LR zsh
-    	ls 
+    emulate -LR zsh
+        ls
 }
-
-# Delete a duplicate entry in known hosts
 
 function dsh() {
-	sed -i ${1}d ~/.ssh/known_hosts
+    sed -i ${1}d ~/.ssh/known_hosts
 }
 
-
-setterm -blink on
