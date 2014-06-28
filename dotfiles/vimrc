@@ -1,3 +1,16 @@
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'gmarik/Vundle.vim'
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle "tomtom/tlib_vim"
+Bundle "garbas/vim-snipmate"
+Bundle "honza/vim-snippets"
+Plugin 'rodjek/vim-puppet'
+call vundle#end()            " required
+filetype plugin indent on    " required
+
 set ts=4
 set sw=4
 set incsearch
