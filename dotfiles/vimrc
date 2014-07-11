@@ -1,16 +1,24 @@
-set nocompatible
+let mapleader = ","
+set nocompatible    
 filetype off
+
+"""""" Plugins
+" set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle "garbas/vim-snipmate"
 Bundle "honza/vim-snippets"
-Plugin 'rodjek/vim-puppet'
-call vundle#end()            " required
-filetype plugin indent on    " required
+Plugin "rodjek/vim-puppet"
+Plugin "tpope/vim-fugitive"
 
+""""""" Misc
 set ts=4
 set sw=4
 set incsearch
@@ -24,3 +32,24 @@ autocmd FileType ruby setl sw=2 sts=2 et
 colorscheme desert
 syntax enable
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+
+"""""" SELECTA
+" Run a given vim command on the results of fuzzy selecting from a given shell
+" command. See usage below.
+function! SelectaCommand(choice_command, selecta_args, vim_command)
+  try
+    silent let selection = system(a:choice_command . " | selecta " . a:selecta_args)
+  catch /Vim:Interrupt/
+    " Swallow the ^C so that the redraw below happens; otherwise there will be
+    " leftovers from selecta on the screen
+    redraw!
+    return
+  endtry
+  redraw!
+  exec a:vim_command . " " . selection
+endfunction
+
+" Find all files in all non-dot directories starting in the working directory.
+" Fuzzy select one of those. Open the selected file with :e.
+nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
+

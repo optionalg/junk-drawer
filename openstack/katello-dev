@@ -11,11 +11,13 @@ write_files:
      service iptables stop
      chkconfig iptables off
 
+
      subscription-manager register --username $RHN_USER --password $RHN_PASS --auto-attach
+     rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 
-     yum -y install git ruby screen vim-enhanced telnet
-
-     mkdir -p /etc/pki/pulp # due to 6368
+     yum -y install git ruby screen vim-enhanced telnet puppet puppet-server
+     usermod -G puppet $CLOUD_USER  # 5399
+     mkdir -p /etc/pki/pulp         # 6368
 
      cd /root
      git clone https://github.com/Katello/katello-deploy.git

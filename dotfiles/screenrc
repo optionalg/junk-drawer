@@ -7,7 +7,6 @@ defscrollback 10000
 defmonitor on	
 activity "%"
 
-bindkey -k kh select 0 # Home = screen 0
 bindkey -k k1 select 0 # F1 = screen 0
 bindkey -k k2 select 1 # F2 = screen 1
 bindkey -k k3 select 2 # F3 = screen 2
