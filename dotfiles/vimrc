@@ -15,8 +15,8 @@ Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle "garbas/vim-snipmate"
 Bundle "honza/vim-snippets"
-Plugin "rodjek/vim-puppet"
-Plugin "tpope/vim-fugitive"
+Bundle "rodjek/vim-puppet"
+Bundle "tpope/vim-fugitive"
 
 """"""" Misc
 set ts=4
