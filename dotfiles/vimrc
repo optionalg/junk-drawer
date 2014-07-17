@@ -15,10 +15,10 @@ Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle "garbas/vim-snipmate"
 Bundle "honza/vim-snippets"
-Bundle "rodjek/vim-puppet"
-Bundle "tpope/vim-fugitive"
+Bundle 'rodjek/vim-puppet'
 
 """"""" Misc
+
 set ts=4
 set sw=4
 set incsearch
@@ -29,8 +29,9 @@ set visualbell
 set numberwidth=1
 autocmd FileType ruby setl sw=2 sts=2 et
 autocmd FileType ruby setl sw=2 sts=2 et
-colorscheme desert
 syntax enable
+set background=dark
+colorscheme solarized
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 
 """""" SELECTA
@@ -51,5 +52,9 @@ endfunction
 
 " Find all files in all non-dot directories starting in the working directory.
 " Fuzzy select one of those. Open the selected file with :e.
-nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
+nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":tabe")<cr>
+
+map <F7> :tabp<cr>
+map <F8> :tabn<cr>
+map <tab> :tabn<cr>
 
