@@ -5,19 +5,27 @@ write_files:
    content: |
      #!/bin/bash
      CLOUD_USER="cloud-user"     
-     RHN_USER="your-rhn-user"
-     RHN_PASS="XXXXXXXXXXXXX"
+     RHN_USER="xxxxxxxxx"
+     RHN_PASS="xxxxxxxxx"
 
      service iptables stop
      chkconfig iptables off
 
-
      subscription-manager register --username $RHN_USER --password $RHN_PASS --auto-attach
-     rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
 
-     yum -y install git ruby screen vim-enhanced telnet puppet puppet-server
-     usermod -G puppet $CLOUD_USER  # 5399
+     yum -y install git ruby screen vim-enhanced telnet yum-utils wget
+
+     # Pre-install puppet and add $CLOUD_USER to puppet group - due to 5399
+     yum-config-manager --enable rhel-6-server-rpms epel
+     yum-config-manager --enable rhel-6-server-optional-rpms
+     yum-config-manager --enable rhel-server-rhscl-6-rpms
+     rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+     yum -y install puppet puppet-server
+     usermod -G puppet $CLOUD_USER
+
      mkdir -p /etc/pki/pulp         # 6368
+
+     yum -y install mosh
 
      cd /root
      git clone https://github.com/Katello/katello-deploy.git
@@ -35,9 +43,19 @@ write_files:
      sed -i -e "s/^Defaults.*requiretty$/Defaults !requiretty/g" /etc/sudoers
 
      sudo su $CLOUD_USER -c "/bin/bash --login -c \"rvm use 1.9.3-p448 && cd $CLD_HOME/foreman && bundle install\""
+     
+     # 5399 again
+     echo :ssl_certificate: "/etc/pki/katello/certs/katello-ca.crt" >> $CLD_HOME/foreman/config/settings.yml
+     echo :ssl_ca_file: "/etc/pki/katello/certs/katello-ca.crt"     >> $CLD_HOME/foreman/config/settings.yml
+     echo :ssl_priv_key: "/etc/pki/katello/private/katello-ca.key"  >> $CLD_HOME/foreman/config/settings.yml
+
+     # Personal puppet module
+     puppet module install stbenjam/stbenjam
+     echo "include stbenjam" | puppet apply
 
      # Start rails server in a detached screen session
      sudo su $CLOUD_USER -c "/bin/bash --login -c \"cd $CLD_HOME/foreman && screen -m -d rails s puma\""
+
      echo "Done."
 runcmd:
  - [ cloud-init-per, once, install_katello, /root/install_katello.sh ]
