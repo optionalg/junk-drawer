@@ -11,13 +11,12 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-Plugin "MarcWeber/vim-addon-mw-utils"
-Plugin "tomtom/tlib_vim"
-Plugin "garbas/vim-snipmate"
-Plugin "honza/vim-snippets"
-Plugin "rodjek/vim-puppet"
-Plugin "tpope/vim-fugitive"
-
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+Plugin 'honza/vim-snippets'
+Plugin 'rodjek/vim-puppet'
+Plugin 'tpope/vim-fugitive'
 """"""" Misc
 set ts=4
 set sw=4
