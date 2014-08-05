@@ -14,7 +14,6 @@ set folder=~/Maildir/
 set record="=Sent"
 set postponed="=Drafts"
 
-# Start in insert mode, in the right place
 set editor = "vim +:silent +/^$ +:nohlsearch +star"
 
 # GPG
@@ -37,7 +36,7 @@ set pgp_replyencrypt=yes
 set pgp_timeout=1800
 set pgp_good_sign="^gpg: Good signature from"
 
-set query_command="/usr/bin/lbdbq %s" 
+set query_command="/usr/bin/lbdbq %s" # query tlr's little brothers database.
 
 # Compose Options
 set forward_format  = "Fwd: %s"
@@ -84,7 +83,7 @@ macro index <F12> "<shell-escape>$HOME/bin/checkmail.sh<enter>"
 
 # Notmuch
 ### BEGIN NOTMUCH-MUTT SETTINGS
-          macro index / \
+           macro index / \
                  "<enter-command>unset wait_key<enter><shell-escape>notmuch-mutt --prompt search<enter><change-folder-readonly>~/.cache/notmuch/mutt/results<enter>" \
                  "notmuch: search mail"
            macro index <F9> \
@@ -99,7 +98,9 @@ macro index <F12> "<shell-escape>$HOME/bin/checkmail.sh<enter>"
 # Sidebar
 mailboxes =INBOX \
 =satellite6-list \
-=bugs \
+=GitHub \
+=bugzilla \
+=redmine \
 =foreman-users \
 =foreman-dev \
 =freeipa-users \
@@ -131,12 +132,17 @@ macro pager b '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
 # Remap bounce-message function to “B”
 bind index B bounce-message
 
-# Mark All Read
-macro index M "T.*\n;WN" "Mark all messages as read"
+macro index A "T.*\n;aN" "Archive all mail"
+macro index M "T.*\n;WN\CT.*\n" "Mark all messages as read"
+macro index i "l~F\n" "Show all flagged (important) mail"
+macro index u "T~F\n;F\CT.*\n" "Unflag all flagged mail"
+macro index n "l~N\n" "Show new mail"
+macro index N "lall\n" "Show all mail"
+
 
 # Some viewing settings
 macro index \cb |urlview\n
 macro pager \cb |urlview\n
-auto_view text/calendar
+# auto_view text/calendar
 auto_view text/html
 alternative_order text/plain text/html
